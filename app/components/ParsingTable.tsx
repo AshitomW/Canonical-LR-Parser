@@ -24,7 +24,7 @@ export default function ParsingTable({
       case 'reduce':
         return `r${action.value}`;
       case 'accept':
-        return 'acc';
+        return 'accept';
       default:
         return '';
     }
