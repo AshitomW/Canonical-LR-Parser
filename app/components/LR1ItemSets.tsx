@@ -38,7 +38,7 @@ export default function LR1ItemSets({
     <div className="lr1-item-sets">
       <div className="section-header">
         <h3 className="section-title">
-          <span className="title-icon">🔄</span>
+          <span className="title-icon">[I]</span>
           LR(1) Item Sets (States)
         </h3>
         <div className="section-controls">

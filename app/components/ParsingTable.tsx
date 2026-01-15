@@ -47,13 +47,13 @@ export default function ParsingTable({
   return (
     <div className="parsing-table-container">
       <h3 className="section-title">
-        <span className="title-icon">📊</span>
+        <span className="title-icon">[T]</span>
         CLR Parsing Table
       </h3>
 
       {table.conflicts.length > 0 && (
         <div className="conflicts-warning">
-          <span className="warning-icon">⚠️</span>
+          <span className="warning-icon">[!]</span>
           <div className="conflicts-list">
             <strong>Conflicts detected:</strong>
             {table.conflicts.map((conflict, i) => (
@@ -65,7 +65,7 @@ export default function ParsingTable({
 
       {table.conflicts.length === 0 && (
         <div className="no-conflicts">
-          <span className="success-icon">✅</span>
+          <span className="success-icon">[OK]</span>
           <span>No conflicts! This grammar is CLR(1).</span>
         </div>
       )}

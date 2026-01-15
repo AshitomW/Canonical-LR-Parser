@@ -119,7 +119,7 @@ export default function StateGraph({
   return (
     <div className="state-graph">
       <h3 className="section-title">
-        <span className="title-icon">🗺️</span>
+        <span className="title-icon">[S]</span>
         State Transition Diagram
       </h3>
       
@@ -139,7 +139,7 @@ export default function StateGraph({
               refY="3.5"
               orient="auto"
             >
-              <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+              <polygon points="0 0, 10 3.5, 0 7" fill="#8080a0" />
             </marker>
             <marker
               id="arrowhead-highlighted"
@@ -149,7 +149,7 @@ export default function StateGraph({
               refY="3.5"
               orient="auto"
             >
-              <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b" />
+              <polygon points="0 0, 10 3.5, 0 7" fill="#cccc80" />
             </marker>
             <filter id="glow">
               <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
@@ -196,7 +196,7 @@ export default function StateGraph({
                 <path
                   d={`M ${startX} ${startY} Q ${ctrlX} ${ctrlY} ${endX} ${endY}`}
                   fill="none"
-                  stroke={isHighlighted ? '#f59e0b' : '#64748b'}
+                  stroke={isHighlighted ? '#cccc80' : '#8080a0'}
                   strokeWidth={isHighlighted ? 3 : 2}
                   markerEnd={isHighlighted ? 'url(#arrowhead-highlighted)' : 'url(#arrowhead)'}
                   className="edge-path"
@@ -206,7 +206,7 @@ export default function StateGraph({
                   y={ctrlY - 8}
                   textAnchor="middle"
                   className={`edge-label ${isTerminal(edge.symbol) ? 'terminal' : 'non-terminal'}`}
-                  fill={isTerminal(edge.symbol) ? '#22d3ee' : '#a78bfa'}
+                  fill={isTerminal(edge.symbol) ? '#cccc80' : '#a3a3ff'}
                 >
                   {edge.symbol}
                 </text>
@@ -230,7 +230,7 @@ export default function StateGraph({
                       C ${pos.x + 60} ${pos.y - 60}, ${pos.x + 60} ${pos.y + 60}, 
                       ${pos.x + nodeRadius * 0.7} ${pos.y + nodeRadius * 0.7}`}
                   fill="none"
-                  stroke={isHighlighted ? '#f59e0b' : '#64748b'}
+                  stroke={isHighlighted ? '#cccc80' : '#8080a0'}
                   strokeWidth={isHighlighted ? 3 : 2}
                   markerEnd={isHighlighted ? 'url(#arrowhead-highlighted)' : 'url(#arrowhead)'}
                 />
@@ -239,7 +239,7 @@ export default function StateGraph({
                   y={pos.y}
                   textAnchor="start"
                   className={`edge-label ${isTerminal(loop.symbol) ? 'terminal' : 'non-terminal'}`}
-                  fill={isTerminal(loop.symbol) ? '#22d3ee' : '#a78bfa'}
+                  fill={isTerminal(loop.symbol) ? '#cccc80' : '#a3a3ff'}
                 >
                   {loop.symbol}
                 </text>
@@ -274,7 +274,7 @@ export default function StateGraph({
                       y1={pos.y}
                       x2={pos.x - nodeRadius - 5}
                       y2={pos.y}
-                      stroke="#22c55e"
+                      stroke="#80cc80"
                       strokeWidth={2}
                       markerEnd="url(#arrowhead)"
                     />
@@ -282,7 +282,7 @@ export default function StateGraph({
                       x={pos.x - 60}
                       y={pos.y - 10}
                       className="start-label"
-                      fill="#22c55e"
+                      fill="#80cc80"
                     >
                       start
                     </text>
@@ -296,7 +296,7 @@ export default function StateGraph({
                     cy={pos.y}
                     r={nodeRadius + 5}
                     fill="none"
-                    stroke="#fbbf24"
+                    stroke="#cccc80"
                     strokeWidth={2}
                   />
                 )}

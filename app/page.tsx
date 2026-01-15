@@ -95,11 +95,11 @@ export default function Home() {
   };
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: 'grammar', label: 'Grammar', icon: '📜' },
-    { id: 'itemsets', label: 'LR(1) Item Sets', icon: '🔄' },
-    { id: 'table', label: 'Parsing Table', icon: '📊' },
-    { id: 'graph', label: 'State Graph', icon: '🗺️' },
-    { id: 'parse', label: 'Parse String', icon: '▶️' },
+    { id: 'grammar', label: 'Grammar', icon: '[G]' },
+    { id: 'itemsets', label: 'LR(1) Item Sets', icon: '[I]' },
+    { id: 'table', label: 'Parsing Table', icon: '[T]' },
+    { id: 'graph', label: 'State Graph', icon: '[S]' },
+    { id: 'parse', label: 'Parse String', icon: '[>]' },
   ];
 
   if (isLoading) {
@@ -117,7 +117,7 @@ export default function Home() {
       <header className="app-header">
         <div className="header-content">
           <h1 className="app-title">
-            <span className="title-icon">⚙️</span>
+            <span className="title-icon">[*]</span>
             CLR Parser Visualization
           </h1>
           <p className="app-subtitle">
@@ -126,7 +126,7 @@ export default function Home() {
         </div>
         <div className="header-badge">
           <span className="badge-text">No Conflicts</span>
-          <span className="badge-icon">✓</span>
+          <span className="badge-icon">[OK]</span>
         </div>
       </header>
 
@@ -143,7 +143,7 @@ export default function Home() {
             className="parse-input"
           />
           <button onClick={handleParse} className="parse-button">
-            <span className="btn-icon">▶️</span>
+            <span className="btn-icon">{'[>]'}</span>
             Parse
           </button>
         </div>

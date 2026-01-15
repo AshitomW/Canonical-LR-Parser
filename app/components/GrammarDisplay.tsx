@@ -14,7 +14,7 @@ export default function GrammarDisplay({
   return (
     <div className="grammar-display">
       <h3 className="section-title">
-        <span className="title-icon">📜</span>
+        <span className="title-icon">[G]</span>
         Augmented Grammar
       </h3>
       <div className="grammar-container">

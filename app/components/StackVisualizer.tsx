@@ -69,10 +69,10 @@ export default function StackVisualizer({
 
   const getActionIcon = (action: Action): string => {
     switch (action.type) {
-      case 'shift': return '⬆️';
-      case 'reduce': return '⬇️';
-      case 'accept': return '✅';
-      case 'error': return '❌';
+      case 'shift': return '[^]';
+      case 'reduce': return '[v]';
+      case 'accept': return '[OK]';
+      case 'error': return '[X]';
       default: return '';
     }
   };
@@ -92,7 +92,7 @@ export default function StackVisualizer({
     <div className="stack-visualizer">
       <div className="visualizer-header">
         <h3 className="section-title">
-          <span className="title-icon">📚</span>
+          <span className="title-icon">[P]</span>
           Parsing Visualization
         </h3>
         <div className="step-indicator">
@@ -106,7 +106,7 @@ export default function StackVisualizer({
           <h4 className="subsection-title">Parser Stack</h4>
           <div className="stack-container" ref={stackRef}>
             <div className="stack-base">
-              <span>⊥ Base</span>
+              <span>BASE</span>
             </div>
             {displayStack.map((item, idx) => (
               <div
@@ -123,7 +123,7 @@ export default function StackVisualizer({
               </div>
             ))}
             <div className="stack-top">
-              <span>↑ Top</span>
+              <span>TOP</span>
             </div>
           </div>
         </div>
@@ -142,7 +142,7 @@ export default function StackVisualizer({
             ))}
           </div>
           <div className="input-pointer">
-            <span className="pointer-arrow">↑</span>
+            <span className="pointer-arrow">^</span>
             <span className="pointer-label">Current Input</span>
           </div>
         </div>
@@ -187,7 +187,7 @@ export default function StackVisualizer({
           className="control-btn reset-btn"
           title="Reset"
         >
-          ⏮️ Reset
+          {'[<<]'} Reset
         </button>
         <button
           onClick={() => onStepChange(Math.max(0, currentStep - 1))}
@@ -195,14 +195,14 @@ export default function StackVisualizer({
           className="control-btn"
           title="Previous Step"
         >
-          ⏪ Prev
+          {'[<]'} Prev
         </button>
         <button
           onClick={onPlayPause}
           className={`control-btn play-btn ${isPlaying ? 'playing' : ''}`}
           title={isPlaying ? 'Pause' : 'Play'}
         >
-          {isPlaying ? '⏸️ Pause' : '▶️ Play'}
+          {isPlaying ? '[||] Pause' : '[>] Play'}
         </button>
         <button
           onClick={() => onStepChange(Math.min(steps.length - 1, currentStep + 1))}
@@ -210,14 +210,14 @@ export default function StackVisualizer({
           className="control-btn"
           title="Next Step"
         >
-          Next ⏩
+          Next {'[>]'}
         </button>
         <button
           onClick={() => onStepChange(steps.length - 1)}
           className="control-btn"
           title="Go to End"
         >
-          End ⏭️
+          End {'[>>]'}
         </button>
       </div>
 
@@ -234,12 +234,12 @@ export default function StackVisualizer({
         <div className={`result-display ${step.actionDetail.type === 'accept' ? 'success' : 'error'}`}>
           {step.actionDetail.type === 'accept' ? (
             <>
-              <span className="result-icon">🎉</span>
+              <span className="result-icon">[OK]</span>
               <span className="result-text">String Accepted Successfully!</span>
             </>
           ) : (
             <>
-              <span className="result-icon">❌</span>
+              <span className="result-icon">[X]</span>
               <span className="result-text">Parsing Error</span>
             </>
           )}
