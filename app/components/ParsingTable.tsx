@@ -74,7 +74,7 @@ export default function ParsingTable({
         <table className="parsing-table">
           <thead>
             <tr>
-              <th rowSpan={2} className="state-header">State</th>
+              <th rowSpan={2} className="parsing-state-header">State</th>
               <th colSpan={actionTerminals.length} className="action-header">ACTION</th>
               <th colSpan={gotoNonTerminals.length} className="goto-header">GOTO</th>
             </tr>

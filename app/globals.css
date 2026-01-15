@@ -797,7 +797,7 @@ body {
   color: var(--text-primary);
 }
 
-.state-header {
+.parsing-state-header {
   background: var(--bg-tertiary) !important;
 }
 
