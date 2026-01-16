@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { ParseStep, grammar, Action } from '../lib/clr-parser';
+import { useEffect, useRef, useState } from "react";
+import { ParseStep, grammar, Action } from "../lib/clr-parser";
 
 interface StackVisualizerProps {
   steps: ParseStep[];
@@ -33,10 +33,11 @@ export default function StackVisualizer({
   useEffect(() => {
     if (!step || !prevStep) return;
 
-    if (step.actionDetail.type === 'shift') {
+    if (step.actionDetail.type === "shift") {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAnimatingPush(true);
       setTimeout(() => setAnimatingPush(false), 300);
-    } else if (step.actionDetail.type === 'reduce') {
+    } else if (step.actionDetail.type === "reduce") {
       setAnimatingPop(true);
       setTimeout(() => setAnimatingPop(false), 300);
     }
@@ -52,39 +53,53 @@ export default function StackVisualizer({
   if (!step) {
     return (
       <div className="stack-visualizer empty">
-        <p>Enter a string and click "Parse" to see step-by-step visualization.</p>
+        <p>
+          Enter a string and click &quot;Parse&quot; to see step-by-step
+          visualization.
+        </p>
       </div>
     );
   }
 
   const getActionClass = (action: Action): string => {
     switch (action.type) {
-      case 'shift': return 'action-shift';
-      case 'reduce': return 'action-reduce';
-      case 'accept': return 'action-accept';
-      case 'error': return 'action-error';
-      default: return '';
+      case "shift":
+        return "action-shift";
+      case "reduce":
+        return "action-reduce";
+      case "accept":
+        return "action-accept";
+      case "error":
+        return "action-error";
+      default:
+        return "";
     }
   };
 
   const getActionIcon = (action: Action): string => {
     switch (action.type) {
-      case 'shift': return '[^]';
-      case 'reduce': return '[v]';
-      case 'accept': return '[OK]';
-      case 'error': return '[X]';
-      default: return '';
+      case "shift":
+        return "[^]";
+      case "reduce":
+        return "[v]";
+      case "accept":
+        return "[OK]";
+      case "error":
+        return "[X]";
+      default:
+        return "";
     }
   };
 
   // Build display stack (alternating symbols and states)
-  const displayStack: { value: string | number; type: 'state' | 'symbol' }[] = [];
+  const displayStack: { value: string | number; type: "state" | "symbol" }[] =
+    [];
   for (let i = 0; i < step.stack.length; i++) {
     const val = step.stack[i];
-    if (typeof val === 'number') {
-      displayStack.push({ value: val, type: 'state' });
+    if (typeof val === "number") {
+      displayStack.push({ value: val, type: "state" });
     } else {
-      displayStack.push({ value: val, type: 'symbol' });
+      displayStack.push({ value: val, type: "symbol" });
     }
   }
 
@@ -112,11 +127,15 @@ export default function StackVisualizer({
               <div
                 key={idx}
                 className={`stack-item ${item.type} ${
-                  idx === displayStack.length - 1 && animatingPush ? 'push-animation' : ''
+                  idx === displayStack.length - 1 && animatingPush
+                    ? "push-animation"
+                    : ""
                 }`}
               >
-                {item.type === 'state' ? (
-                  <span className="state-value">s{item.value}</span>
+                {item.type === "state" ? (
+                  <span className="state-value">
+                    s<sub>{item.value}</sub>
+                  </span>
                 ) : (
                   <span className="symbol-value">{item.value}</span>
                 )}
@@ -133,9 +152,9 @@ export default function StackVisualizer({
           <h4 className="subsection-title">Input Buffer</h4>
           <div className="input-buffer">
             {step.input.map((token, idx) => (
-              <div 
-                key={idx} 
-                className={`input-token ${idx === 0 ? 'current' : ''}`}
+              <div
+                key={idx}
+                className={`input-token ${idx === 0 ? "current" : ""}`}
               >
                 {token}
               </div>
@@ -171,23 +190,34 @@ export default function StackVisualizer({
       </div>
 
       {/* If reduce, show the production */}
-      {step.actionDetail.type === 'reduce' && step.actionDetail.value !== undefined && (
-        <div className="reduction-display">
-          <span className="reduction-label">Reducing by:</span>
-          <span className="reduction-production">
-            {grammar[step.actionDetail.value].lhs} → {grammar[step.actionDetail.value].rhs.join(' ')}
-          </span>
-        </div>
-      )}
+      {step.actionDetail.type === "reduce" &&
+        step.actionDetail.value !== undefined && (
+          <div className="reduction-display">
+            <span className="reduction-label">Reducing by:</span>
+            <span className="reduction-production">
+              {grammar[step.actionDetail.value].lhs}
+              {" → "}
+              {grammar[step.actionDetail.value].rhs.map((sym, idx) =>
+                typeof sym === "number" ? (
+                  <span key={idx}>
+                    s<sub>{sym}</sub>{" "}
+                  </span>
+                ) : (
+                  <span key={idx}>{sym} </span>
+                )
+              )}
+            </span>
+          </div>
+        )}
 
       {/* Controls */}
       <div className="visualizer-controls">
-        <button 
-          onClick={onReset} 
+        <button
+          onClick={onReset}
           className="control-btn reset-btn"
           title="Reset"
         >
-          {'[<<]'} Reset
+          {"[<<]"} Reset
         </button>
         <button
           onClick={() => onStepChange(Math.max(0, currentStep - 1))}
@@ -195,35 +225,37 @@ export default function StackVisualizer({
           className="control-btn"
           title="Previous Step"
         >
-          {'[<]'} Prev
+          {"[<]"} Prev
         </button>
         <button
           onClick={onPlayPause}
-          className={`control-btn play-btn ${isPlaying ? 'playing' : ''}`}
-          title={isPlaying ? 'Pause' : 'Play'}
+          className={`control-btn play-btn ${isPlaying ? "playing" : ""}`}
+          title={isPlaying ? "Pause" : "Play"}
         >
-          {isPlaying ? '[||] Pause' : '[>] Play'}
+          {isPlaying ? "[||] Pause" : "[>] Play"}
         </button>
         <button
-          onClick={() => onStepChange(Math.min(steps.length - 1, currentStep + 1))}
+          onClick={() =>
+            onStepChange(Math.min(steps.length - 1, currentStep + 1))
+          }
           disabled={currentStep === steps.length - 1}
           className="control-btn"
           title="Next Step"
         >
-          Next {'[>]'}
+          Next {"[>]"}
         </button>
         <button
           onClick={() => onStepChange(steps.length - 1)}
           className="control-btn"
           title="Go to End"
         >
-          End {'[>>]'}
+          End {"[>>]"}
         </button>
       </div>
 
       {/* Progress Bar */}
       <div className="progress-container">
-        <div 
+        <div
           className="progress-bar"
           style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
         />
@@ -231,8 +263,12 @@ export default function StackVisualizer({
 
       {/* Result indicator */}
       {currentStep === steps.length - 1 && (
-        <div className={`result-display ${step.actionDetail.type === 'accept' ? 'success' : 'error'}`}>
-          {step.actionDetail.type === 'accept' ? (
+        <div
+          className={`result-display ${
+            step.actionDetail.type === "accept" ? "success" : "error"
+          }`}
+        >
+          {step.actionDetail.type === "accept" ? (
             <>
               <span className="result-icon">[OK]</span>
               <span className="result-text">String Accepted Successfully!</span>

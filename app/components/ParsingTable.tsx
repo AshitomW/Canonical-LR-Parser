@@ -1,6 +1,13 @@
-'use client';
+"use client";
 
-import { ParsingTable as ParsingTableType, terminals, nonTerminals, LR1State, Action } from '../lib/clr-parser';
+import { JSX } from "react";
+import {
+  ParsingTable as ParsingTableType,
+  terminals,
+  nonTerminals,
+  LR1State,
+  Action,
+} from "../lib/clr-parser";
 
 interface ParsingTableProps {
   table: ParsingTableType;
@@ -8,39 +15,47 @@ interface ParsingTableProps {
   highlightedCell?: { state: number; symbol: string };
 }
 
-export default function ParsingTable({ 
-  table, 
+export default function ParsingTable({
+  table,
   states,
-  highlightedCell 
+  highlightedCell,
 }: ParsingTableProps) {
-  const actionTerminals = terminals.filter(t => t !== 'ε');
-  const gotoNonTerminals = nonTerminals.filter(nt => nt !== "S'");
+  const actionTerminals = terminals.filter((t) => t !== "ε");
+  const gotoNonTerminals = nonTerminals.filter((nt) => nt !== "S'");
 
-  const formatAction = (action: Action | undefined): string => {
-    if (!action) return '';
+  const formatAction = (action: Action | undefined): string | JSX.Element => {
+    if (!action) return "";
     switch (action.type) {
-      case 'shift':
-        return `s${action.value}`;
-      case 'reduce':
-        return `r${action.value}`;
-      case 'accept':
-        return 'accept';
+      case "shift":
+        return (
+          <>
+            s<sub>{action.value}</sub>
+          </>
+        );
+      case "reduce":
+        return (
+          <>
+            r<sub>{action.value}</sub>
+          </>
+        );
+      case "accept":
+        return "accept";
       default:
-        return '';
+        return "";
     }
   };
 
   const getActionClass = (action: Action | undefined): string => {
-    if (!action) return '';
+    if (!action) return "";
     switch (action.type) {
-      case 'shift':
-        return 'action-shift';
-      case 'reduce':
-        return 'action-reduce';
-      case 'accept':
-        return 'action-accept';
+      case "shift":
+        return "action-shift";
+      case "reduce":
+        return "action-reduce";
+      case "accept":
+        return "action-accept";
       default:
-        return '';
+        return "";
     }
   };
 
@@ -74,48 +89,66 @@ export default function ParsingTable({
         <table className="parsing-table">
           <thead>
             <tr>
-              <th rowSpan={2} className="parsing-state-header">State</th>
-              <th colSpan={actionTerminals.length} className="action-header">ACTION</th>
-              <th colSpan={gotoNonTerminals.length} className="goto-header">GOTO</th>
+              <th rowSpan={2} className="parsing-state-header">
+                State
+              </th>
+              <th colSpan={actionTerminals.length} className="action-header">
+                ACTION
+              </th>
+              <th colSpan={gotoNonTerminals.length} className="goto-header">
+                GOTO
+              </th>
             </tr>
             <tr>
-              {actionTerminals.map(t => (
-                <th key={t} className="terminal-header">{t}</th>
+              {actionTerminals.map((t) => (
+                <th key={t} className="terminal-header">
+                  {t}
+                </th>
               ))}
-              {gotoNonTerminals.map(nt => (
-                <th key={nt} className="non-terminal-header">{nt}</th>
+              {gotoNonTerminals.map((nt) => (
+                <th key={nt} className="non-terminal-header">
+                  {nt}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {states.map(state => (
+            {states.map((state) => (
               <tr key={state.id}>
                 <td className="state-cell">{state.id}</td>
-                {actionTerminals.map(t => {
+                {actionTerminals.map((t) => {
                   const key = `${state.id},${t}`;
                   const action = table.action.get(key);
-                  const isHighlighted = highlightedCell?.state === state.id && highlightedCell?.symbol === t;
-                  
+                  const isHighlighted =
+                    highlightedCell?.state === state.id &&
+                    highlightedCell?.symbol === t;
+
                   return (
-                    <td 
-                      key={t} 
-                      className={`action-cell ${getActionClass(action)} ${isHighlighted ? 'highlighted' : ''}`}
+                    <td
+                      key={t}
+                      className={`action-cell ${getActionClass(action)} ${
+                        isHighlighted ? "highlighted" : ""
+                      }`}
                     >
                       {formatAction(action)}
                     </td>
                   );
                 })}
-                {gotoNonTerminals.map(nt => {
+                {gotoNonTerminals.map((nt) => {
                   const key = `${state.id},${nt}`;
                   const gotoState = table.goto.get(key);
-                  const isHighlighted = highlightedCell?.state === state.id && highlightedCell?.symbol === nt;
-                  
+                  const isHighlighted =
+                    highlightedCell?.state === state.id &&
+                    highlightedCell?.symbol === nt;
+
                   return (
-                    <td 
-                      key={nt} 
-                      className={`goto-cell ${gotoState !== undefined ? 'has-goto' : ''} ${isHighlighted ? 'highlighted' : ''}`}
+                    <td
+                      key={nt}
+                      className={`goto-cell ${
+                        gotoState !== undefined ? "has-goto" : ""
+                      } ${isHighlighted ? "highlighted" : ""}`}
                     >
-                      {gotoState !== undefined ? gotoState : ''}
+                      {gotoState !== undefined ? gotoState : ""}
                     </td>
                   );
                 })}
@@ -128,15 +161,19 @@ export default function ParsingTable({
       <div className="table-legend">
         <div className="legend-item">
           <span className="legend-color action-shift"></span>
-          <span>sN = Shift, go to state N</span>
+          <span>
+            s<sub>N</sub> = Shift, go to state N
+          </span>
         </div>
         <div className="legend-item">
           <span className="legend-color action-reduce"></span>
-          <span>rN = Reduce by production N</span>
+          <span>
+            r<sub>N</sub> = Reduce by production N
+          </span>
         </div>
         <div className="legend-item">
           <span className="legend-color action-accept"></span>
-          <span>acc = Accept</span>
+          <span>accept = Accept</span>
         </div>
         <div className="legend-item">
           <span className="legend-color has-goto"></span>

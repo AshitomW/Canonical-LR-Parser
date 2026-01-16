@@ -69,7 +69,9 @@ export default function LR1ItemSets({
             }`}
           >
             <div className="state-header" onClick={() => toggleState(state.id)}>
-              <div className="state-id">I{state.id}</div>
+              <div className="state-id">
+                I<sub>{state.id}</sub>
+              </div>
               <div className="state-meta">
                 <span className="item-count">{state.items.length} items</span>
                 <span className="expand-icon">
@@ -144,7 +146,9 @@ export default function LR1ItemSets({
                               {symbol}
                             </span>
                             <span className="transition-arrow">→</span>
-                            <span className="target-state">I{targetState}</span>
+                            <span className="target-state">
+                              I<sub>{targetState}</sub>
+                            </span>
                           </div>
                         )
                       )}
