@@ -5,39 +5,53 @@
    ======================================== */
 
 :root {
-  /* Default (Space) Theme Color Palette */
+  /* Default Fallback (Space) */
   --retro-dark: #0a0a23;
   --retro-base: #1b1b3a;
   --retro-accent: #f5f5f5;
   --retro-light: #a3a3ff;
 }
 
-[data-theme="terminal"] {
+:root[data-theme="space"] {
+  --retro-dark: #0a0a23;
+  --retro-base: #1b1b3a;
+  --retro-accent: #f5f5f5;
+  --retro-light: #a3a3ff;
+}
+
+:root[data-theme="terminal"] {
   --retro-dark: #0d0d0d;
   --retro-base: #1a1a1a;
   --retro-accent: #33ff00;
   --retro-light: #ccffcc;
 }
 
-[data-theme="dracula"] {
-  --retro-dark: #282a36;
-  --retro-base: #44475a;
-  --retro-accent: #ff79c6;
-  --retro-light: #bd93f9;
-}
-
-[data-theme="nord"] {
+:root[data-theme="nord"] {
   --retro-dark: #2e3440;
   --retro-base: #3b4252;
   --retro-accent: #88c0d0;
   --retro-light: #81a1c1;
 }
 
-[data-theme="paper"] {
-  --retro-dark: #eeeeee;
-  --retro-base: #ffffff;
-  --retro-accent: #222222;
-  --retro-light: #444444;
+:root[data-theme="gruvbox"] {
+  --retro-dark: #282828;
+  --retro-base: #3c3836;
+  --retro-accent: #fabd2f;
+  --retro-light: #83a598;
+}
+
+:root[data-theme="tokyo-night"] {
+  --retro-dark: #1a1b26;
+  --retro-base: #24283b;
+  --retro-accent: #7aa2f7;
+  --retro-light: #c0caf5;
+}
+
+:root[data-theme="catppuccin"] {
+  --retro-dark: #24273a;
+  --retro-base: #363a4f;
+  --retro-accent: #f5bde6;
+  --retro-light: #b7bdf8;
 }
 
 :root {

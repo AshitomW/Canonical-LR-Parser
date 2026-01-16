@@ -5,9 +5,10 @@ import { useState, useEffect } from "react";
 const themes = [
   "space",
   "terminal",
-  "dracula",
   "nord",
-  "paper",
+  "gruvbox",
+  "tokyo-night",
+  "catppuccin",
 ];
 
 export default function ThemeSwitcher() {
