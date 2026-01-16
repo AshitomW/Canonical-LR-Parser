@@ -6,6 +6,7 @@ import LR1ItemSets from "./components/LR1ItemSets";
 import ParsingTable from "./components/ParsingTable";
 import StackVisualizer from "./components/StackVisualizer";
 import StateGraph from "./components/StateGraph";
+import ThemeSwitcher from "./components/ThemeSwitcher";
 import {
   getStates,
   getParsingTable,
@@ -133,9 +134,12 @@ export default function Home() {
           </h1>
           <p className="app-subtitle">Canonical LR(1) Parsing</p>
         </div>
-        <div className="header-badge">
-          <span className="badge-text">No Conflicts</span>
-          <span className="badge-icon">[OK]</span>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <ThemeSwitcher />
+          <div className="header-badge">
+            <span className="badge-text">No Conflicts</span>
+            <span className="badge-icon">[OK]</span>
+          </div>
         </div>
       </header>
 

@@ -5,31 +5,61 @@
    ======================================== */
 
 :root {
-  /* Space Theme Color Palette */
+  /* Default (Space) Theme Color Palette */
   --retro-dark: #0a0a23;
   --retro-base: #1b1b3a;
   --retro-accent: #f5f5f5;
   --retro-light: #a3a3ff;
-  
-  /* Derived Colors */
+}
+
+[data-theme="terminal"] {
+  --retro-dark: #0d0d0d;
+  --retro-base: #1a1a1a;
+  --retro-accent: #33ff00;
+  --retro-light: #ccffcc;
+}
+
+[data-theme="dracula"] {
+  --retro-dark: #282a36;
+  --retro-base: #44475a;
+  --retro-accent: #ff79c6;
+  --retro-light: #bd93f9;
+}
+
+[data-theme="nord"] {
+  --retro-dark: #2e3440;
+  --retro-base: #3b4252;
+  --retro-accent: #88c0d0;
+  --retro-light: #81a1c1;
+}
+
+[data-theme="paper"] {
+  --retro-dark: #eeeeee;
+  --retro-base: #ffffff;
+  --retro-accent: #222222;
+  --retro-light: #444444;
+}
+
+:root {
+  /* Derived Colors - Mapped to current theme variables */
   --bg-primary: var(--retro-dark);
   --bg-secondary: var(--retro-base);
-  --bg-tertiary: #252545;
-  --bg-card: #16163a;
-  --bg-card-hover: #202052;
+  --bg-tertiary: color-mix(in srgb, var(--retro-base), var(--retro-dark) 25%);
+  --bg-card: color-mix(in srgb, var(--retro-base), var(--retro-dark) 50%);
+  --bg-card-hover: color-mix(in srgb, var(--retro-base), var(--retro-light) 10%);
   
   --text-primary: var(--retro-accent);
-  --text-secondary: #c0c0d0;
-  --text-muted: #8080a0;
+  --text-secondary: color-mix(in srgb, var(--retro-accent), var(--retro-base) 30%);
+  --text-muted: color-mix(in srgb, var(--retro-accent), var(--retro-base) 60%);
   
   --accent-primary: var(--retro-light);
-  --accent-secondary: #8080cc;
+  --accent-secondary: color-mix(in srgb, var(--retro-light), var(--retro-base) 20%);
   --accent-success: #80cc80;
   --accent-warning: #cccc80;
   --accent-error: #cc8080;
   
-  --border-color: rgba(163, 163, 255, 0.15);
-  --border-hover: rgba(163, 163, 255, 0.3);
+  --border-color: color-mix(in srgb, var(--retro-light), transparent 85%);
+  --border-hover: color-mix(in srgb, var(--retro-light), transparent 70%);
   
   --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
@@ -141,6 +171,28 @@ body {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
+}
+
+.theme-switcher {
+  display: flex;
+  align-items: center;
+}
+
+.theme-select {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  padding: 0.4rem 0.8rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  outline: none;
+}
+
+.theme-select:hover {
+  border-color: var(--accent-primary);
 }
 
 .app-title {
