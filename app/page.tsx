@@ -131,9 +131,7 @@ export default function Home() {
             <span className="title-icon">[*]</span>
             CLR Parser Visualization
           </h1>
-          <p className="app-subtitle">
-            Canonical LR(1) Parsing • Interactive Demonstration
-          </p>
+          <p className="app-subtitle">Canonical LR(1) Parsing</p>
         </div>
         <div className="header-badge">
           <span className="badge-text">No Conflicts</span>
