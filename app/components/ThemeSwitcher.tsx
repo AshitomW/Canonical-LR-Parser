@@ -7,8 +7,12 @@ const themes = [
   "terminal",
   "nord",
   "gruvbox",
+  "monokai",
+  "kanagawa",
   "tokyo-night",
   "catppuccin",
+  "solarized-light",
+  "latte",
 ];
 
 export default function ThemeSwitcher() {

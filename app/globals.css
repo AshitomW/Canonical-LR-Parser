@@ -54,6 +54,34 @@
   --retro-light: #b7bdf8;
 }
 
+:root[data-theme="monokai"] {
+  --retro-dark: #272822;
+  --retro-base: #383830;
+  --retro-accent: #f8f8f2;
+  --retro-light: #f92672;
+}
+
+:root[data-theme="kanagawa"] {
+  --retro-dark: #1f1f28;
+  --retro-base: #2a2a37;
+  --retro-accent: #dcd7ba;
+  --retro-light: #7e9cd8;
+}
+
+:root[data-theme="solarized-light"] {
+  --retro-dark: #fdf6e3;
+  --retro-base: #eee8d5;
+  --retro-accent: #002b36;
+  --retro-light: #b58900;
+}
+
+:root[data-theme="latte"] {
+  --retro-dark: #eff1f5;
+  --retro-base: #e6e9ef;
+  --retro-accent: #4c4f69;
+  --retro-light: #8839ef;
+}
+
 :root {
   /* Derived Colors - Mapped to current theme variables */
   --bg-primary: var(--retro-dark);
