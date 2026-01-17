@@ -233,6 +233,8 @@ export default function Home() {
               onStepChange={setCurrentStep}
               onPlayPause={() => setIsPlaying(!isPlaying)}
               onReset={handleReset}
+              table={table!}
+              states={states}
             />
           </div>
         )}

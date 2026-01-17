@@ -1,7 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { ParseStep, grammar, Action } from "../lib/clr-parser";
+import { useEffect, useRef, useState, JSX } from "react";
+import {
+  ParseStep,
+  grammar,
+  Action,
+  ParsingTable as ParsingTableType,
+  LR1State,
+  terminals,
+  nonTerminals,
+} from "../lib/clr-parser";
 
 interface StackVisualizerProps {
   steps: ParseStep[];
@@ -11,6 +19,8 @@ interface StackVisualizerProps {
   onStepChange: (step: number) => void;
   onPlayPause: () => void;
   onReset: () => void;
+  table: ParsingTableType;
+  states: LR1State[];
 }
 
 export default function StackVisualizer({
@@ -21,6 +31,8 @@ export default function StackVisualizer({
   onStepChange,
   onPlayPause,
   onReset,
+  table,
+  states,
 }: StackVisualizerProps) {
   const stackRef = useRef<HTMLDivElement>(null);
   const [animatingPush, setAnimatingPush] = useState(false);
@@ -28,6 +40,9 @@ export default function StackVisualizer({
 
   const step = steps[currentStep];
   const prevStep = currentStep > 0 ? steps[currentStep - 1] : null;
+
+  const actionTerminals = terminals.filter((t) => t !== "ε");
+  const gotoNonTerminals = nonTerminals.filter((nt) => nt !== "S'");
 
   // Determine if we're pushing or popping
   useEffect(() => {
@@ -91,6 +106,42 @@ export default function StackVisualizer({
     }
   };
 
+  const formatAction = (action: Action | undefined): string | JSX.Element => {
+    if (!action) return "";
+    switch (action.type) {
+      case "shift":
+        return (
+          <>
+            s<sub>{action.value}</sub>
+          </>
+        );
+      case "reduce":
+        return (
+          <>
+            r<sub>{action.value}</sub>
+          </>
+        );
+      case "accept":
+        return "accept";
+      default:
+        return "";
+    }
+  };
+
+  const getTableActionClass = (action: Action | undefined): string => {
+    if (!action) return "";
+    switch (action.type) {
+      case "shift":
+        return "action-shift";
+      case "reduce":
+        return "action-reduce";
+      case "accept":
+        return "action-accept";
+      default:
+        return "";
+    }
+  };
+
   // Build display stack (alternating symbols and states)
   const displayStack: { value: string | number; type: "state" | "symbol" }[] =
     [];
@@ -102,6 +153,10 @@ export default function StackVisualizer({
       displayStack.push({ value: val, type: "symbol" });
     }
   }
+
+  // Get current state for table lookup
+  const currentStateId = step.stack[step.stack.length - 1] as number;
+  const currentSymbol = step.input[0];
 
   return (
     <div className="stack-visualizer">
@@ -180,6 +235,79 @@ export default function StackVisualizer({
               ))
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Relevant Table Row Display */}
+      <div className="table-row-display mb-6">
+        <h4 className="subsection-title">Relevant Table Row (State {currentStateId})</h4>
+        <div className="overflow-x-auto border border-[var(--border-color)]">
+          <table className="parsing-table w-full">
+             <thead>
+              <tr>
+                <th rowSpan={2} className="parsing-state-header">
+                  State
+                </th>
+                <th colSpan={actionTerminals.length} className="action-header">
+                  ACTION
+                </th>
+                <th colSpan={gotoNonTerminals.length} className="goto-header">
+                  GOTO
+                </th>
+              </tr>
+              <tr>
+                {actionTerminals.map((t) => (
+                  <th key={t} className="terminal-header">
+                    {t}
+                  </th>
+                ))}
+                {gotoNonTerminals.map((nt) => (
+                  <th key={nt} className="non-terminal-header">
+                    {nt}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                 <td className="state-cell">{currentStateId}</td>
+                  {actionTerminals.map((t) => {
+                  const key = `${currentStateId},${t}`;
+                  const action = table.action.get(key);
+                  const isHighlighted = currentSymbol === t;
+
+                  return (
+                    <td
+                      key={t}
+                      className={`action-cell ${getTableActionClass(action)} ${
+                        isHighlighted ? "highlighted" : ""
+                      }`}
+                    >
+                      {formatAction(action)}
+                    </td>
+                  );
+                })}
+                {gotoNonTerminals.map((nt) => {
+                  const key = `${currentStateId},${nt}`;
+                  const gotoState = table.goto.get(key);
+                  // We don't highlight GOTO columns for action steps typically,
+                  // unless it's a transition after reduction, but the table lookup
+                  // is primarily about the ACTION lookup on the current terminal.
+                  
+                  return (
+                    <td
+                      key={nt}
+                      className={`goto-cell ${
+                        gotoState !== undefined ? "has-goto" : ""
+                      }`}
+                    >
+                      {gotoState !== undefined ? gotoState : ""}
+                    </td>
+                  );
+                })}
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
