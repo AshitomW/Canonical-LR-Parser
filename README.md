@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CLR Parser
+
+An interactive visualization of Canonical LR(1) parsing implemented with Next.js and TypeScript. This project demonstrates the complete LR(1) parsing process including grammar definition, item sets construction, parsing table generation, and step-by-step parsing visualization.
+
+## Features
+
+- **Interactive Grammar Display** - View the grammar rules with highlighting during parsing
+- **LR(1) Item Sets** - Explore all canonical LR(1) states with closure and goto operations
+- **Parsing Table** - View the complete ACTION and GOTO tables with conflict detection
+- **State Graph** - Visual representation of state transitions
+- **Step-by-Step Parsing** - Watch the parser process input strings with stack visualization
+- **Animation Controls** - Play, pause, and adjust animation speed
+- **Dark/Light Theme** - Switch between visual themes
+- **Conflict Detection** - Automatic detection of shift-reduce and reduce-reduce conflicts
+
+## Grammar
+
+The parser implements the following augmented grammar:
+
+```
+S' → S
+S  → L = R
+S  → R
+L  → * R
+L  → id
+R  → L
+```
+
+Terminals: `id`, `*`, `=`, `$`
+
+Non-terminals: `S'`, `S`, `L`, `R`
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ installed
+- npm, yarn, pnpm, or bun package manager
+
+### Installation
+
+1. Clone the repository:
+
+```bash
+git clone <repository-url>
+cd clr-parser
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+### Running the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Parsing a String
 
-## Learn More
+1. Enter an input string in the input field (e.g., `id = * id`)
+2. Click "Parse" to generate the parsing steps
+3. Navigate to the "Parse String" tab to see step-by-step execution
+4. Use playback controls to play, pause, or step through the parsing process
+5. Adjust animation speed with the slider
 
-To learn more about Next.js, take a look at the following resources:
+### Exploring the Parser
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Grammar Tab**: View all production rules
+- **LR(1) Item Sets Tab**: Browse all canonical LR(1) states with their items
+- **Parsing Table Tab**: Examine the complete ACTION and GOTO tables
+- **State Graph Tab**: Visualize the finite automaton of LR(1) states
+- **Parse String Tab**: Watch the parsing process in real-time
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+app/
+├── lib/
+│   └── clr-parser.ts     # Core CLR parser implementation
+├── components/
+│   ├── GrammarDisplay.tsx      # Grammar visualization
+│   ├── LR1ItemSets.tsx         # LR(1) item sets display
+│   ├── ParsingTable.tsx        # ACTION/GOTO table
+│   ├── StackVisualizer.tsx     # Parsing animation
+│   ├── StateGraph.tsx          # State transition graph
+│   └── ThemeSwitcher.tsx       # Dark/light theme toggle
+├── layout.tsx            # Root layout
+└── page.tsx              # Main application page
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Implementation Details
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Core Functions
+
+- `closure(items: LR1Item[])` - Computes the closure of LR(1) items
+- `goto(items: LR1Item[], symbol: Symbol)` - Computes the goto function
+- `buildCanonicalCollection()` - Builds the canonical collection of LR(1) states
+- `buildParsingTable(states: LR1State[])` - Constructs the parsing table
+- `parse(input: string, states: LR1State[], table: ParsingTable)` - Parses input strings
+
+### Data Structures
+
+- `Production` - Grammar production rule
+- `LR1Item` - LR(1) item with lookahead
+- `LR1State` - Collection of LR(1) items with transitions
+- `ParsingTable` - ACTION and GOTO tables with conflict detection
+
+## Build for Production
+
+```bash
+npm run build
+npm start
+```
+
+## Tech Stack
+
+- **Next.js 16** - React framework
+- **React 19** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS 4** - Styling
+- **Vercel Analytics** - Usage analytics
+
+## Acknowledgments
+
+- Based on the Dragon Book (Compilers: Principles, Techniques, and Tools)
+- Implemented as part of a compiler design project demonstrating Canonical LR parsing
