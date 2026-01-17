@@ -269,6 +269,7 @@ export default function StackVisualizer({
               </tr>
             </thead>
             <tbody>
+              {/* CURRENT STATE ROW */}
               <tr>
                  <td className="state-cell">{currentStateId}</td>
                   {actionTerminals.map((t) => {
@@ -290,9 +291,6 @@ export default function StackVisualizer({
                 {gotoNonTerminals.map((nt) => {
                   const key = `${currentStateId},${nt}`;
                   const gotoState = table.goto.get(key);
-                  // We don't highlight GOTO columns for action steps typically,
-                  // unless it's a transition after reduction, but the table lookup
-                  // is primarily about the ACTION lookup on the current terminal.
                   
                   return (
                     <td
@@ -306,6 +304,59 @@ export default function StackVisualizer({
                   );
                 })}
               </tr>
+
+              {/* EXPOSED STATE ROW (Only for REDUCE actions) */}
+              {step.actionDetail.type === "reduce" && step.actionDetail.value !== undefined && (() => {
+                 const prod = grammar[step.actionDetail.value];
+                 // Calculate exposed state: current stack length - 2 * rhs_length
+                 // Stack structure: [state, symbol, state, symbol, state]
+                 // We want the state at index: length - 1 - (2 * rhs.length)
+                 const exposedStateIndex = step.stack.length - 1 - (2 * prod.rhs.length);
+                 const exposedState = step.stack[exposedStateIndex] as number;
+                 
+                 // If for some reason index is invalid (shouldn't happen in valid parse), don't render
+                 if (exposedStateIndex < 0 || typeof exposedState !== 'number') return null;
+
+                 return (
+                    <tr className="goto-transition-row">
+                      <td className="state-cell exposed-state-cell">
+                        <div className="flex flex-col items-center">
+                          <span>{exposedState}</span>
+                          <span className="text-[10px] opacity-70">(Exposed)</span>
+                        </div>
+                      </td>
+                      
+                      {/* ACTION columns - dimmed/irrelevant for GOTO lookup */}
+                      {actionTerminals.map((t) => (
+                        <td key={t} className="action-cell opacity-30"></td>
+                      ))}
+
+                      {/* GOTO columns - Highlight the transition */}
+                      {gotoNonTerminals.map((nt) => {
+                        const key = `${exposedState},${nt}`;
+                        const gotoState = table.goto.get(key);
+                        const isHighlighted = nt === prod.lhs;
+
+                        return (
+                          <td
+                            key={nt}
+                            className={`goto-cell ${
+                              gotoState !== undefined ? "has-goto" : ""
+                            } ${isHighlighted ? "highlighted-goto" : ""}`}
+                          >
+                             {isHighlighted ? (
+                                <div className="flex flex-col items-center">
+                                   <span>{gotoState}</span>
+                                </div>
+                             ) : (
+                                gotoState !== undefined ? gotoState : ""
+                             )}
+                          </td>
+                        );
+                      })}
+                    </tr>
+                 );
+              })()}
             </tbody>
           </table>
         </div>

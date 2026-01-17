@@ -1174,6 +1174,23 @@ body {
   font-weight: 500;
 }
 
+.goto-transition-row {
+  animation: slideIn 0.3s ease-out;
+  background-color: rgba(163, 163, 255, 0.05);
+}
+
+.exposed-state-cell {
+  background-color: var(--bg-card);
+  border-right: 2px solid var(--accent-primary) !important;
+}
+
+.goto-cell.highlighted-goto {
+  background: rgba(128, 128, 204, 0.3);
+  border: 2px solid var(--accent-secondary);
+  font-weight: 700;
+  animation: pulse 1s infinite;
+}
+
 .table-legend {
   margin-top: 1.5rem;
   display: flex;
