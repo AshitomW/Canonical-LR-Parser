@@ -1325,6 +1325,15 @@ body {
   animation: slideUp 0.2s ease-out;
 }
 
+.stack-item.being-reduced {
+  background: rgba(128, 204, 128, 0.4) !important;
+  border: 2px solid var(--accent-success) !important;
+  box-shadow: 0 0 10px rgba(128, 204, 128, 0.3);
+  transform: scale(0.98);
+  font-weight: 700;
+  z-index: 10;
+}
+
 .state-value {
   color: var(--accent-primary);
   font-weight: 600;

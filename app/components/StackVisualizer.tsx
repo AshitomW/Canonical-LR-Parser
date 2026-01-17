@@ -178,14 +178,26 @@ export default function StackVisualizer({
             <div className="stack-base">
               <span>BASE</span>
             </div>
-            {displayStack.map((item, idx) => (
+            {displayStack.map((item, idx) => {
+              // Calculate if this item is part of the reduction
+              let isBeingReduced = false;
+              if (step.actionDetail.type === "reduce" && step.actionDetail.value !== undefined) {
+                const prod = grammar[step.actionDetail.value];
+                const itemsToPop = prod.rhs.length * 2;
+                const startHighlightIndex = displayStack.length - itemsToPop;
+                if (idx >= startHighlightIndex) {
+                  isBeingReduced = true;
+                }
+              }
+
+              return (
               <div
                 key={idx}
                 className={`stack-item ${item.type} ${
                   idx === displayStack.length - 1 && animatingPush
                     ? "push-animation"
                     : ""
-                }`}
+                } ${isBeingReduced ? "being-reduced" : ""}`}
               >
                 {item.type === "state" ? (
                   <span className="state-value">
@@ -195,7 +207,7 @@ export default function StackVisualizer({
                   <span className="symbol-value">{item.value}</span>
                 )}
               </div>
-            ))}
+            )})}
             <div className="stack-top">
               <span>TOP</span>
             </div>
