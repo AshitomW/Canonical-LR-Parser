@@ -84,19 +84,41 @@ export default function ThemeSwitcher() {
                   aria-label={`Select ${theme.name} theme`}
                   aria-pressed={currentTheme === theme.id}
                 >
-                  <div className="swatch-preview">
+                  <div className="theme-header">
+                    <span className="theme-name">{theme.name}</span>
+                    <span className="theme-color-count">4 colors</span>
+                  </div>
+                  <div
+                    className="theme-preview-bar"
+                    style={{
+                      background: `linear-gradient(to right, ${theme.colors.join(', ')})`
+                    }}
+                  >
+                    {theme.colors.map((color, index) => (
+                      <div key={index} style={{ backgroundColor: color }} />
+                    ))}
+                  </div>
+                  <div className="theme-colors-row">
                     {theme.colors.map((color, index) => (
                       <div
                         key={index}
                         className="swatch-color"
                         style={{ backgroundColor: color }}
+                        title={color}
                       />
                     ))}
                   </div>
-                  <span className="swatch-name">{theme.name}</span>
-                  {currentTheme === theme.id && (
-                    <span className="swatch-check">✓</span>
-                  )}
+                  <div className="theme-footer">
+                    <div className="theme-color-labels">
+                      {theme.colors.map((color, index) => (
+                        <div
+                          key={index}
+                          className="color-dot"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </button>
               ))}
             </div>
