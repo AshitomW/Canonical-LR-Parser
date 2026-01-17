@@ -54,25 +54,11 @@
   --retro-light: #bd93f9;
 }
 
-:root[data-theme="one-dark"] {
-  --retro-dark: #282c34;
-  --retro-base: #3e4451;
-  --retro-accent: #abb2bf;
-  --retro-light: #61afef;
-}
-
 :root[data-theme="github-dark"] {
   --retro-dark: #0d1117;
   --retro-base: #161b22;
   --retro-accent: #c9d1d9;
   --retro-light: #58a6ff;
-}
-
-:root[data-theme="oceanic-next"] {
-  --retro-dark: #1b2b34;
-  --retro-base: #343d46;
-  --retro-accent: #c8c8c8;
-  --retro-light: #6699cc;
 }
 
 :root[data-theme="rose-pine"] {
@@ -87,13 +73,6 @@
   --retro-base: #1a1c29;
   --retro-accent: #c4b6d8;
   --retro-light: #a0b5c6;
-}
-
-:root[data-theme="zinc"] {
-  --retro-dark: #18181b;
-  --retro-base: #27272a;
-  --retro-accent: #e4e4e7;
-  --retro-light: #71717a;
 }
 
 :root {

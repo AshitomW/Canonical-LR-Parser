@@ -34,16 +34,7 @@ export const themes = [
     name: "Dracula",
     colors: ["#282a36", "#44475a", "#bd93f9", "#f8f8f2"],
   },
-  {
-    id: "one-dark",
-    name: "One Dark",
-    colors: ["#282c34", "#3e4451", "#61afef", "#abb2bf"],
-  },
-  {
-    id: "oceanic-next",
-    name: "Oceanic Next",
-    colors: ["#1b2b34", "#343d46", "#6699cc", "#c8c8c8"],
-  },
+
   {
     id: "rose-pine",
     name: "Rose Pine",
@@ -53,10 +44,5 @@ export const themes = [
     id: "vesper",
     name: "Vesper",
     colors: ["#0d0e14", "#1a1c29", "#a0b5c6", "#c4b6d8"],
-  },
-  {
-    id: "zinc",
-    name: "Zinc",
-    colors: ["#18181b", "#27272a", "#e4e4e7", "#71717a"],
   },
 ];
