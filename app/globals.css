@@ -1806,3 +1806,56 @@ body {
     transform: translateY(-2px);
   }
 }
+
+/* ========================================
+   Stack Visualizer Enhancements
+   ======================================== */
+
+.stack-item.exposed-state {
+  border-color: #00bcd4; /* Cyan */
+  background: rgba(0, 188, 212, 0.15);
+  box-shadow: 0 0 8px rgba(0, 188, 212, 0.3);
+}
+
+.stack-item.exposed-state .state-value {
+  color: #00bcd4;
+  font-weight: 700;
+}
+
+.highlighted-goto-source {
+  border: 2px solid #00bcd4 !important;
+  background: rgba(0, 188, 212, 0.15) !important;
+  color: #00bcd4 !important;
+}
+
+.highlighted-goto {
+  background: rgba(0, 188, 212, 0.25) !important;
+  border: 2px solid #00bcd4 !important;
+  color: #00bcd4 !important;
+  font-weight: bold;
+}
+
+/* Textual Hints Highlights */
+.highlight-text {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+  padding: 0 4px;
+  border-radius: 4px;
+  font-weight: 600;
+  border: 1px solid var(--border-color);
+}
+
+.highlight-goto-source-text {
+  color: #00bcd4;
+  font-weight: 700;
+}
+
+.highlight-goto-text {
+  color: #00bcd4;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(0, 188, 212, 0.3);
+}
+
+.hints-section .title-icon {
+  color: #00bcd4;
+}

@@ -181,12 +181,20 @@ export default function StackVisualizer({
             {displayStack.map((item, idx) => {
               // Calculate if this item is part of the reduction
               let isBeingReduced = false;
+              let isExposedState = false;
+
               if (step.actionDetail.type === "reduce" && step.actionDetail.value !== undefined) {
                 const prod = grammar[step.actionDetail.value];
                 const itemsToPop = prod.rhs.length * 2;
                 const startHighlightIndex = displayStack.length - itemsToPop;
+                
                 if (idx >= startHighlightIndex) {
                   isBeingReduced = true;
+                }
+                
+                // Identify exposed state (the one right before the reduced items)
+                if (idx === startHighlightIndex - 1 && item.type === 'state') {
+                  isExposedState = true;
                 }
               }
 
@@ -197,7 +205,7 @@ export default function StackVisualizer({
                   idx === displayStack.length - 1 && animatingPush
                     ? "push-animation"
                     : ""
-                } ${isBeingReduced ? "being-reduced" : ""}`}
+                } ${isBeingReduced ? "being-reduced" : ""} ${isExposedState ? "exposed-state" : ""}`}
               >
                 {item.type === "state" ? (
                   <span className="state-value">
@@ -331,7 +339,7 @@ export default function StackVisualizer({
 
                  return (
                     <tr className="goto-transition-row">
-                      <td className="state-cell exposed-state-cell">
+                      <td className="state-cell exposed-state-cell highlighted-goto-source">
                         <div className="flex flex-col items-center">
                           <span>{exposedState}</span>
                           <span className="text-[10px] opacity-70">(Exposed)</span>
@@ -371,6 +379,64 @@ export default function StackVisualizer({
               })()}
             </tbody>
           </table>
+        </div>
+      </div>
+
+      {/* Hints Section */}
+      <div className="hints-section mb-6">
+        <h4 className="subsection-title">
+            <span className="title-icon">[?]</span> 
+            Step Explanation
+        </h4>
+        <div className="hint-content p-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-md font-mono text-sm leading-6">
+            {step.actionDetail.type === 'shift' && (
+                <p>
+                    <span className="text-[var(--accent-color)] font-bold">SHIFT</span>: 
+                    Pushing symbol <span className="highlight-text">'{currentSymbol}'</span> and next state onto the stack.
+                </p>
+            )}
+            
+            {step.actionDetail.type === 'reduce' && step.actionDetail.value !== undefined && (() => {
+                 const prod = grammar[step.actionDetail.value];
+                 const exposedStateIndex = step.stack.length - 1 - (2 * prod.rhs.length);
+                 const exposedState = step.stack[exposedStateIndex];
+                 const gotoKey = `${exposedState},${prod.lhs}`;
+                 const gotoState = table.goto.get(gotoKey);
+
+                 return (
+                     <>
+                        <p className="mb-2">
+                            <span className="text-[var(--delete-color)] font-bold">REDUCE</span>: 
+                            Using production <span className="highlight-text">{prod.lhs} → {prod.rhs.join(' ')}</span>.
+                        </p>
+                        <p className="mb-2">
+                             1. Pop <span className="highlight-text">{prod.rhs.length * 2}</span> items from stack ({prod.rhs.length} symbols + {prod.rhs.length} states).
+                        </p>
+                        <p className="mb-2">
+                             2. Top of stack becomes <span className="highlight-goto-source-text font-bold">State {exposedState}</span> (Exposed State).
+                        </p>
+                        <p>
+                             3. Check GOTO table: <span className="highlight-goto-source-text">State {exposedState}</span> + Non-terminal <span className="highlight-goto-text">{prod.lhs}</span> = <span className="highlight-goto-text font-bold">State {gotoState}</span>.
+                             <br/>
+                             4. Push <span className="highlight-goto-text">{prod.lhs}</span> and <span className="highlight-goto-text font-bold">State {gotoState}</span> onto stack.
+                        </p>
+                     </>
+                 )
+            })()}
+
+            {step.actionDetail.type === 'accept' && (
+                <p>
+                    <span className="text-[var(--success-color)] font-bold">ACCEPT</span>: 
+                    Parsing completed successfully!
+                </p>
+            )}
+
+            {step.actionDetail.type === 'error' && (
+                <p>
+                    <span className="text-[var(--error-color)] font-bold">ERROR</span>: 
+                    No valid action for State {currentStateId} and input '{currentSymbol}'.
+                </p>
+            )}
         </div>
       </div>
 
