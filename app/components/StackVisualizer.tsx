@@ -165,9 +165,58 @@ export default function StackVisualizer({
           <span className="title-icon">[P]</span>
           Parsing Visualization
         </h3>
+
+        <div className="visualizer-controls">
+          <button
+            onClick={onReset}
+            className="control-btn reset-btn"
+            title="Reset"
+          >
+            {"[<<]"} Reset
+          </button>
+          <button
+            onClick={() => onStepChange(Math.max(0, currentStep - 1))}
+            disabled={currentStep === 0}
+            className="control-btn"
+            title="Previous Step"
+          >
+            {"[<]"} Prev
+          </button>
+          <button
+            onClick={onPlayPause}
+            className={`control-btn play-btn ${isPlaying ? "playing" : ""}`}
+            title={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? "[||] Pause" : "[>] Play"}
+          </button>
+          <button
+            onClick={() =>
+              onStepChange(Math.min(steps.length - 1, currentStep + 1))
+            }
+            disabled={currentStep === steps.length - 1}
+            className="control-btn"
+            title="Next Step"
+          >
+            Next {"[>]"}
+          </button>
+          <button
+            onClick={() => onStepChange(steps.length - 1)}
+            className="control-btn"
+            title="Go to End"
+          >
+            End {"[>>]"}
+          </button>
+        </div>
+
         <div className="step-indicator">
           Step {step.step + 1} / {steps.length}
         </div>
+      </div>
+      <div className="progress-container">
+        <div
+          className="progress-bar"
+          style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+        />
       </div>
 
       <div className="visualizer-main">
@@ -183,39 +232,43 @@ export default function StackVisualizer({
               let isBeingReduced = false;
               let isExposedState = false;
 
-              if (step.actionDetail.type === "reduce" && step.actionDetail.value !== undefined) {
+              if (
+                step.actionDetail.type === "reduce" &&
+                step.actionDetail.value !== undefined
+              ) {
                 const prod = grammar[step.actionDetail.value];
                 const itemsToPop = prod.rhs.length * 2;
                 const startHighlightIndex = displayStack.length - itemsToPop;
-                
+
                 if (idx >= startHighlightIndex) {
                   isBeingReduced = true;
                 }
-                
+
                 // Identify exposed state (the one right before the reduced items)
-                if (idx === startHighlightIndex - 1 && item.type === 'state') {
+                if (idx === startHighlightIndex - 1 && item.type === "state") {
                   isExposedState = true;
                 }
               }
 
               return (
-              <div
-                key={idx}
-                className={`stack-item ${item.type} ${
-                  idx === displayStack.length - 1 && animatingPush
-                    ? "push-animation"
-                    : ""
-                } ${isBeingReduced ? "being-reduced" : ""} ${isExposedState ? "exposed-state" : ""}`}
-              >
-                {item.type === "state" ? (
-                  <span className="state-value">
-                    s<sub>{item.value}</sub>
-                  </span>
-                ) : (
-                  <span className="symbol-value">{item.value}</span>
-                )}
-              </div>
-            )})}
+                <div
+                  key={idx}
+                  className={`stack-item ${item.type} ${
+                    idx === displayStack.length - 1 && animatingPush
+                      ? "push-animation"
+                      : ""
+                  } ${isBeingReduced ? "being-reduced" : ""} ${isExposedState ? "exposed-state" : ""}`}
+                >
+                  {item.type === "state" ? (
+                    <span className="state-value">
+                      s<sub>{item.value}</sub>
+                    </span>
+                  ) : (
+                    <span className="symbol-value">{item.value}</span>
+                  )}
+                </div>
+              );
+            })}
             <div className="stack-top">
               <span>TOP</span>
             </div>
@@ -260,10 +313,12 @@ export default function StackVisualizer({
 
       {/* Relevant Table Row Display */}
       <div className="table-row-display mb-6">
-        <h4 className="subsection-title">Relevant Table Row (State {currentStateId})</h4>
+        <h4 className="subsection-title">
+          Relevant Table Row (State {currentStateId})
+        </h4>
         <div className="overflow-x-auto border border-[var(--border-color)]">
           <table className="parsing-table w-full">
-             <thead>
+            <thead>
               <tr>
                 <th rowSpan={2} className="parsing-state-header">
                   State
@@ -291,8 +346,8 @@ export default function StackVisualizer({
             <tbody>
               {/* CURRENT STATE ROW */}
               <tr>
-                 <td className="state-cell">{currentStateId}</td>
-                  {actionTerminals.map((t) => {
+                <td className="state-cell">{currentStateId}</td>
+                {actionTerminals.map((t) => {
                   const key = `${currentStateId},${t}`;
                   const action = table.action.get(key);
                   const isHighlighted = currentSymbol === t;
@@ -311,7 +366,7 @@ export default function StackVisualizer({
                 {gotoNonTerminals.map((nt) => {
                   const key = `${currentStateId},${nt}`;
                   const gotoState = table.goto.get(key);
-                  
+
                   return (
                     <td
                       key={nt}
@@ -326,26 +381,32 @@ export default function StackVisualizer({
               </tr>
 
               {/* EXPOSED STATE ROW (Only for REDUCE actions) */}
-              {step.actionDetail.type === "reduce" && step.actionDetail.value !== undefined && (() => {
-                 const prod = grammar[step.actionDetail.value];
-                 // Calculate exposed state: current stack length - 2 * rhs_length
-                 // Stack structure: [state, symbol, state, symbol, state]
-                 // We want the state at index: length - 1 - (2 * rhs.length)
-                 const exposedStateIndex = step.stack.length - 1 - (2 * prod.rhs.length);
-                 const exposedState = step.stack[exposedStateIndex] as number;
-                 
-                 // If for some reason index is invalid (shouldn't happen in valid parse), don't render
-                 if (exposedStateIndex < 0 || typeof exposedState !== 'number') return null;
+              {step.actionDetail.type === "reduce" &&
+                step.actionDetail.value !== undefined &&
+                (() => {
+                  const prod = grammar[step.actionDetail.value];
+                  // Calculate exposed state: current stack length - 2 * rhs_length
+                  // Stack structure: [state, symbol, state, symbol, state]
+                  // We want the state at index: length - 1 - (2 * rhs.length)
+                  const exposedStateIndex =
+                    step.stack.length - 1 - 2 * prod.rhs.length;
+                  const exposedState = step.stack[exposedStateIndex] as number;
 
-                 return (
+                  // If for some reason index is invalid (shouldn't happen in valid parse), don't render
+                  if (exposedStateIndex < 0 || typeof exposedState !== "number")
+                    return null;
+
+                  return (
                     <tr className="goto-transition-row">
                       <td className="state-cell exposed-state-cell highlighted-goto-source">
                         <div className="flex flex-col items-center">
                           <span>{exposedState}</span>
-                          <span className="text-[10px] opacity-70">(Exposed)</span>
+                          <span className="text-[10px] opacity-70">
+                            (Exposed)
+                          </span>
                         </div>
                       </td>
-                      
+
                       {/* ACTION columns - dimmed/irrelevant for GOTO lookup */}
                       {actionTerminals.map((t) => (
                         <td key={t} className="action-cell opacity-30"></td>
@@ -364,79 +425,23 @@ export default function StackVisualizer({
                               gotoState !== undefined ? "has-goto" : ""
                             } ${isHighlighted ? "highlighted-goto" : ""}`}
                           >
-                             {isHighlighted ? (
-                                <div className="flex flex-col items-center">
-                                   <span>{gotoState}</span>
-                                </div>
-                             ) : (
-                                gotoState !== undefined ? gotoState : ""
-                             )}
+                            {isHighlighted ? (
+                              <div className="flex flex-col items-center">
+                                <span>{gotoState}</span>
+                              </div>
+                            ) : gotoState !== undefined ? (
+                              gotoState
+                            ) : (
+                              ""
+                            )}
                           </td>
                         );
                       })}
                     </tr>
-                 );
-              })()}
+                  );
+                })()}
             </tbody>
           </table>
-        </div>
-      </div>
-
-      {/* Hints Section */}
-      <div className="hints-section mb-6">
-        <h4 className="subsection-title">
-            <span className="title-icon">[?]</span> 
-            Step Explanation
-        </h4>
-        <div className="hint-content p-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-md font-mono text-sm leading-6">
-            {step.actionDetail.type === 'shift' && (
-                <p>
-                    <span className="text-[var(--accent-color)] font-bold">SHIFT</span>: 
-                    Pushing symbol <span className="highlight-text">'{currentSymbol}'</span> and next state onto the stack.
-                </p>
-            )}
-            
-            {step.actionDetail.type === 'reduce' && step.actionDetail.value !== undefined && (() => {
-                 const prod = grammar[step.actionDetail.value];
-                 const exposedStateIndex = step.stack.length - 1 - (2 * prod.rhs.length);
-                 const exposedState = step.stack[exposedStateIndex];
-                 const gotoKey = `${exposedState},${prod.lhs}`;
-                 const gotoState = table.goto.get(gotoKey);
-
-                 return (
-                     <>
-                        <p className="mb-2">
-                            <span className="text-[var(--delete-color)] font-bold">REDUCE</span>: 
-                            Using production <span className="highlight-text">{prod.lhs} → {prod.rhs.join(' ')}</span>.
-                        </p>
-                        <p className="mb-2">
-                             1. Pop <span className="highlight-text">{prod.rhs.length * 2}</span> items from stack ({prod.rhs.length} symbols + {prod.rhs.length} states).
-                        </p>
-                        <p className="mb-2">
-                             2. Top of stack becomes <span className="highlight-goto-source-text font-bold">State {exposedState}</span> (Exposed State).
-                        </p>
-                        <p>
-                             3. Check GOTO table: <span className="highlight-goto-source-text">State {exposedState}</span> + Non-terminal <span className="highlight-goto-text">{prod.lhs}</span> = <span className="highlight-goto-text font-bold">State {gotoState}</span>.
-                             <br/>
-                             4. Push <span className="highlight-goto-text">{prod.lhs}</span> and <span className="highlight-goto-text font-bold">State {gotoState}</span> onto stack.
-                        </p>
-                     </>
-                 )
-            })()}
-
-            {step.actionDetail.type === 'accept' && (
-                <p>
-                    <span className="text-[var(--success-color)] font-bold">ACCEPT</span>: 
-                    Parsing completed successfully!
-                </p>
-            )}
-
-            {step.actionDetail.type === 'error' && (
-                <p>
-                    <span className="text-[var(--error-color)] font-bold">ERROR</span>: 
-                    No valid action for State {currentStateId} and input '{currentSymbol}'.
-                </p>
-            )}
         </div>
       </div>
 
@@ -446,77 +451,110 @@ export default function StackVisualizer({
         <span className="action-text">{step.action}</span>
       </div>
 
-      {/* If reduce, show the production */}
-      {step.actionDetail.type === "reduce" &&
-        step.actionDetail.value !== undefined && (
-          <div className="reduction-display">
-            <span className="reduction-label">Reducing by:</span>
-            <span className="reduction-production">
-              {grammar[step.actionDetail.value].lhs}
-              {" → "}
-              {grammar[step.actionDetail.value].rhs.map((sym, idx) =>
-                typeof sym === "number" ? (
-                  <span key={idx}>
-                    s<sub>{sym}</sub>{" "}
-                  </span>
-                ) : (
-                  <span key={idx}>{sym} </span>
-                )
-              )}
-            </span>
-          </div>
-        )}
+      {/* Hints Section */}
+      <div className="hints-section mb-6">
+        <h4 className="subsection-title">
+          <span className="title-icon">[?]</span>
+          Step Explanation
+        </h4>
+        <div className="hint-content p-4 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-md font-mono text-sm leading-6">
+          {step.actionDetail.type === "shift" && (
+            <p>
+              <span className="text-[var(--accent-color)] font-bold">
+                SHIFT
+              </span>
+              : Pushing symbol{" "}
+              <span className="highlight-text">
+                &apos;{currentSymbol}&apos;
+              </span>{" "}
+              and next state onto the stack.
+            </p>
+          )}
+
+          {step.actionDetail.type === "reduce" &&
+            step.actionDetail.value !== undefined &&
+            (() => {
+              const prod = grammar[step.actionDetail.value];
+              const exposedStateIndex =
+                step.stack.length - 1 - 2 * prod.rhs.length;
+              const exposedState = step.stack[exposedStateIndex];
+              const gotoKey = `${exposedState},${prod.lhs}`;
+              const gotoState = table.goto.get(gotoKey);
+
+              return (
+                <>
+                  <p className="mb-2">
+                    <span className="text-[var(--delete-color)] font-bold">
+                      REDUCE
+                    </span>
+                    : Using production{" "}
+                    <span className="highlight-text">
+                      {prod.lhs} → {prod.rhs.join(" ")}
+                    </span>
+                    .
+                  </p>
+                  <p className="mb-2">
+                    1. Pop{" "}
+                    <span className="highlight-text">
+                      {prod.rhs.length * 2}
+                    </span>{" "}
+                    items from stack ({prod.rhs.length} symbols +{" "}
+                    {prod.rhs.length} states).
+                  </p>
+                  <p className="mb-2">
+                    2. Top of stack becomes{" "}
+                    <span className="highlight-goto-source-text font-bold">
+                      State {exposedState}
+                    </span>{" "}
+                    (Exposed State).
+                  </p>
+                  <p>
+                    3. Check GOTO table:{" "}
+                    <span className="highlight-goto-source-text">
+                      State {exposedState}
+                    </span>{" "}
+                    + Non-terminal{" "}
+                    <span className="highlight-goto-text">{prod.lhs}</span> ={" "}
+                    <span className="highlight-goto-text font-bold">
+                      State {gotoState}
+                    </span>
+                    .
+                    <br />
+                    4. Push{" "}
+                    <span className="highlight-goto-text">
+                      {prod.lhs}
+                    </span> and{" "}
+                    <span className="highlight-goto-text font-bold">
+                      State {gotoState}
+                    </span>{" "}
+                    onto stack.
+                  </p>
+                </>
+              );
+            })()}
+
+          {step.actionDetail.type === "accept" && (
+            <p>
+              <span className="text-[var(--success-color)] font-bold">
+                ACCEPT
+              </span>
+              : Parsing completed successfully!
+            </p>
+          )}
+
+          {step.actionDetail.type === "error" && (
+            <p>
+              <span className="text-[var(--error-color)] font-bold">ERROR</span>
+              : No valid action for State {currentStateId} and input '
+              {currentSymbol}'.
+            </p>
+          )}
+        </div>
+      </div>
 
       {/* Controls */}
-      <div className="visualizer-controls">
-        <button
-          onClick={onReset}
-          className="control-btn reset-btn"
-          title="Reset"
-        >
-          {"[<<]"} Reset
-        </button>
-        <button
-          onClick={() => onStepChange(Math.max(0, currentStep - 1))}
-          disabled={currentStep === 0}
-          className="control-btn"
-          title="Previous Step"
-        >
-          {"[<]"} Prev
-        </button>
-        <button
-          onClick={onPlayPause}
-          className={`control-btn play-btn ${isPlaying ? "playing" : ""}`}
-          title={isPlaying ? "Pause" : "Play"}
-        >
-          {isPlaying ? "[||] Pause" : "[>] Play"}
-        </button>
-        <button
-          onClick={() =>
-            onStepChange(Math.min(steps.length - 1, currentStep + 1))
-          }
-          disabled={currentStep === steps.length - 1}
-          className="control-btn"
-          title="Next Step"
-        >
-          Next {"[>]"}
-        </button>
-        <button
-          onClick={() => onStepChange(steps.length - 1)}
-          className="control-btn"
-          title="Go to End"
-        >
-          End {"[>>]"}
-        </button>
-      </div>
 
       {/* Progress Bar */}
-      <div className="progress-container">
-        <div
-          className="progress-bar"
-          style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-        />
-      </div>
 
       {/* Result indicator */}
       {currentStep === steps.length - 1 && (
