@@ -68,18 +68,39 @@
   --retro-light: #7e9cd8;
 }
 
+:root[data-theme="dracula"] {
+  --retro-dark: #282a36;
+  --retro-base: #44475a;
+  --retro-accent: #f8f8f2;
+  --retro-light: #bd93f9;
+}
+
+:root[data-theme="one-dark"] {
+  --retro-dark: #282c34;
+  --retro-base: #3e4451;
+  --retro-accent: #abb2bf;
+  --retro-light: #61afef;
+}
+
+:root[data-theme="github-dark"] {
+  --retro-dark: #0d1117;
+  --retro-base: #161b22;
+  --retro-accent: #c9d1d9;
+  --retro-light: #58a6ff;
+}
+
+:root[data-theme="oceanic-next"] {
+  --retro-dark: #1b2b34;
+  --retro-base: #343d46;
+  --retro-accent: #c8c8c8;
+  --retro-light: #6699cc;
+}
+
 :root[data-theme="solarized-light"] {
   --retro-dark: #fdf6e3;
   --retro-base: #eee8d5;
   --retro-accent: #002b36;
   --retro-light: #b58900;
-}
-
-:root[data-theme="latte"] {
-  --retro-dark: #eff1f5;
-  --retro-base: #e6e9ef;
-  --retro-accent: #4c4f69;
-  --retro-light: #8839ef;
 }
 
 :root {

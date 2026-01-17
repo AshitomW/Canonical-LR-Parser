@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 
 const themes = [
+  "github-dark",
   "space",
   "terminal",
   "nord",
@@ -11,16 +12,17 @@ const themes = [
   "kanagawa",
   "tokyo-night",
   "catppuccin",
-  "solarized-light",
-  "latte",
+  "dracula",
+  "one-dark",
+  "oceanic-next",
 ];
 
 export default function ThemeSwitcher() {
-  const [currentTheme, setCurrentTheme] = useState("space");
+  const [currentTheme, setCurrentTheme] = useState("github-dark");
 
   useEffect(() => {
     // Check for saved theme
-    const savedTheme = localStorage.getItem("theme") || "space";
+    const savedTheme = localStorage.getItem("theme") || "github-dark";
     document.documentElement.setAttribute("data-theme", savedTheme);
     setCurrentTheme(savedTheme);
   }, []);
