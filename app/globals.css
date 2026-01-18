@@ -1484,6 +1484,25 @@ body {
   color: var(--accent-error);
 }
 
+.toggle-btn {
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+}
+
+.toggle-btn.active {
+  background: rgba(163, 163, 255, 0.15);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
 /* Progress Bar */
 .progress-container {
   height: 4px;
@@ -1741,6 +1760,16 @@ body {
   .visualizer-controls .control-btn {
     padding: 0.5rem 0.75rem;
     font-size: 0.75rem;
+  }
+
+  .visualizer-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  .step-indicator {
+    text-align: center;
   }
 
   .theme-popover-title {

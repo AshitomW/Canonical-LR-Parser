@@ -37,6 +37,8 @@ export default function StackVisualizer({
   const stackRef = useRef<HTMLDivElement>(null);
   const [animatingPush, setAnimatingPush] = useState(false);
   const [animatingPop, setAnimatingPop] = useState(false);
+  const [showTable, setShowTable] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const step = steps[currentStep];
   const prevStep = currentStep > 0 ? steps[currentStep - 1] : null;
@@ -166,48 +168,7 @@ export default function StackVisualizer({
           Parsing Visualization
         </h3>
 
-        <div className="visualizer-controls">
-          <button
-            onClick={onReset}
-            className="control-btn reset-btn"
-            title="Reset"
-          >
-            {"[<<]"} Reset
-          </button>
-          <button
-            onClick={() => onStepChange(Math.max(0, currentStep - 1))}
-            disabled={currentStep === 0}
-            className="control-btn"
-            title="Previous Step"
-          >
-            {"[<]"} Prev
-          </button>
-          <button
-            onClick={onPlayPause}
-            className={`control-btn play-btn ${isPlaying ? "playing" : ""}`}
-            title={isPlaying ? "Pause" : "Play"}
-          >
-            {isPlaying ? "[||] Pause" : "[>] Play"}
-          </button>
-          <button
-            onClick={() =>
-              onStepChange(Math.min(steps.length - 1, currentStep + 1))
-            }
-            disabled={currentStep === steps.length - 1}
-            className="control-btn"
-            title="Next Step"
-          >
-            Next {"[>]"}
-          </button>
-          <button
-            onClick={() => onStepChange(steps.length - 1)}
-            className="control-btn"
-            title="Go to End"
-          >
-            End {"[>>]"}
-          </button>
-        </div>
-
+        
         <div className="step-indicator">
           Step {step.step + 1} / {steps.length}
         </div>
@@ -311,7 +272,65 @@ export default function StackVisualizer({
         </div>
       </div>
 
+            <div className="visualizer-controls">
+          <button
+            onClick={onReset}
+            className="control-btn reset-btn"
+            title="Reset"
+          >
+            {"[<<]"} Reset
+          </button>
+          <button
+            onClick={() => onStepChange(Math.max(0, currentStep - 1))}
+            disabled={currentStep === 0}
+            className="control-btn"
+            title="Previous Step"
+          >
+            {"[<]"} Prev
+          </button>
+          <button
+            onClick={onPlayPause}
+            className={`control-btn play-btn ${isPlaying ? "playing" : ""}`}
+            title={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? "[||] Pause" : "[>] Play"}
+          </button>
+          <button
+            onClick={() =>
+              onStepChange(Math.min(steps.length - 1, currentStep + 1))
+            }
+            disabled={currentStep === steps.length - 1}
+            className="control-btn"
+            title="Next Step"
+          >
+            Next {"[>]"}
+          </button>
+          <button
+            onClick={() => onStepChange(steps.length - 1)}
+            className="control-btn"
+            title="Go to End"
+          >
+            End {"[>>]"}
+          </button>
+          <button
+            onClick={() => setShowTable(!showTable)}
+            className={`control-btn toggle-btn ${showTable ? "active" : ""}`}
+            title="Toggle Table Display"
+          >
+            {showTable ? "[−] Table" : "[+] Table"}
+          </button>
+          <button
+            onClick={() => setShowHelp(!showHelp)}
+            className={`control-btn toggle-btn ${showHelp ? "active" : ""}`}
+            title="Toggle Help Display"
+          >
+            {showHelp ? "[−] Help" : "[+] Help"}
+          </button>
+        </div>
+
+
       {/* Relevant Table Row Display */}
+      {showTable && (
       <div className="table-row-display mb-6">
         <h4 className="subsection-title">
           Relevant Table Row (State {currentStateId})
@@ -444,6 +463,7 @@ export default function StackVisualizer({
           </table>
         </div>
       </div>
+      )}
 
       {/* Action Display */}
       <div className={`action-display ${getActionClass(step.actionDetail)}`}>
@@ -452,6 +472,7 @@ export default function StackVisualizer({
       </div>
 
       {/* Hints Section */}
+      {showHelp && (
       <div className="hints-section mb-6">
         <h4 className="subsection-title">
           <span className="title-icon">[?]</span>
@@ -551,6 +572,7 @@ export default function StackVisualizer({
           )}
         </div>
       </div>
+      )}
 
       {/* Controls */}
 
